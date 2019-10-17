@@ -23,23 +23,6 @@ function toSetNotation(target: Set<string>) {
     return `{${Array.from(target).join(', ')}}`;
 }
 
-const f = [
-    new FunctionalDependency('A', 'B'),
-    new FunctionalDependency('A', 'C'),
-    new FunctionalDependency('CG', 'H'),
-    new FunctionalDependency('CG', 'I'),
-    new FunctionalDependency('B', 'H'),
-    new FunctionalDependency('I', 'JM'),
-];
-
-const g = [
-    new FunctionalDependency('A', 'BC'),
-    new FunctionalDependency('B', 'CE'),
-    new FunctionalDependency('A', 'E'),
-    new FunctionalDependency('AC', 'H'),
-    new FunctionalDependency('D', 'B'),
-];
-
 function closure(attributes: string, dependencies: FunctionalDependency[]) {
     let results = new Set(attributes.toUpperCase());
     const processed = new Set<string>();
@@ -66,6 +49,27 @@ function closure(attributes: string, dependencies: FunctionalDependency[]) {
     console.log(`\nThe closure of ${attributes} is ${toSetNotation(results)}\n`);
 }
 
-closure('AG', f);
-closure('CD', g);
+closure('AG', [
+    new FunctionalDependency('A', 'B'),
+    new FunctionalDependency('A', 'C'),
+    new FunctionalDependency('CG', 'H'),
+    new FunctionalDependency('CG', 'I'),
+    new FunctionalDependency('B', 'H'),
+    new FunctionalDependency('I', 'JM'),
+]);
+
+closure('CD', [
+    new FunctionalDependency('A', 'BC'),
+    new FunctionalDependency('B', 'CE'),
+    new FunctionalDependency('A', 'E'),
+    new FunctionalDependency('AC', 'H'),
+    new FunctionalDependency('D', 'B'),
+]);
+
+closure('A', [
+    new FunctionalDependency('AD', 'BC'),
+    new FunctionalDependency('AC', 'E'),
+    new FunctionalDependency('B', 'D'),
+    new FunctionalDependency('E', 'D'),
+]);
 
