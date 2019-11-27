@@ -15,6 +15,11 @@ interface FileTemplate {
     filename: string;
 }
 
+const comparatorHelper = (date: DateRange | DateRange[]): number => {
+    const helper = (date: DateRange) => typeof date === "number" ? date : date.start;
+    return Array.isArray(date) ? helper(date[0]) : helper(date);
+}
+
 const source = "./sources";
 const dist = "./dist";
 const dateComparator = ({ date: first }, { date: second }) => comparatorHelper(first) - comparatorHelper(second);
@@ -29,6 +34,7 @@ async function execute() {
         console.log("No source files provided! Process exiting...");
         process.exit(1);
     }
+    console.log(__dirname);
     await clean(dist);
     (await new Promise<String[]>((resolve, reject) => {
         readdir(source, (err, files) => {
@@ -41,7 +47,8 @@ async function execute() {
 }
 
 async function processFile(file: string) {
-    const output = `${dist}/${file.split('.')[0]}`;
+    const name = file.split('.')[0];
+    const output = `${dist}/${name}`;
     await clean(output);
     let buildings: string;
     try {
@@ -64,7 +71,7 @@ async function processFile(file: string) {
     const constructed: Building[] = [];
     const failed: string[] = [];
     lines.map(line => {
-        const matches = /- (\D+), (\D+), ([0-9\-, f]+), (\D+)/g.exec(line);
+        const matches = /[- ]*(\D+), (\D+), ([0-9\-, f]+), (\D+)/g.exec(line);
         if (matches !== null) {
             constructed.push({
                 location: matches[1],
@@ -77,6 +84,7 @@ async function processFile(file: string) {
         }
     });
     if (failed.length) {
+        console.error("Error!");
         console.error(failed.join('\n'))
         throw new Error("Some line(s) could not be parsed!");
     }
@@ -104,7 +112,7 @@ async function processFile(file: string) {
     ];
     await Promise.all(files.map(({ filename, lines }) => 
         new Promise<void>((resolve, reject) => {
-            writeFile(`${output}/${filename}`, lines.join('\n'), err => {
+            writeFile(`${output}/${name}_${filename}`, lines.join('\n'), err => {
                 if (err !== null) {
                     reject(err);
                 } else {
@@ -164,11 +172,6 @@ function serialize(date: DateRange | DateRange[]) {
     } else {
         return helper(date);
     }
-}
-
-const comparatorHelper = (date: DateRange | DateRange[]): number => {
-    const helper = (date: DateRange) => typeof date === "number" ? date : date.start;
-    return Array.isArray(date) ? helper(date[0]) : helper(date);
 }
 
 execute();
