@@ -34,7 +34,6 @@ async function execute() {
         console.log("No source files provided! Process exiting...");
         process.exit(1);
     }
-    console.log(__dirname);
     await clean(dist);
     (await new Promise<String[]>((resolve, reject) => {
         readdir(source, (err, files) => {
@@ -71,7 +70,7 @@ async function processFile(file: string) {
     const constructed: Building[] = [];
     const failed: string[] = [];
     lines.map(line => {
-        const matches = /[- ]*(\D+), (\D+), ([0-9\-, f]+), (\D+)/g.exec(line);
+        const matches = /(\D+), (\D+), ([0-9\-, f]+), (\D+)/g.exec(line);
         if (matches !== null) {
             constructed.push({
                 location: matches[1],
