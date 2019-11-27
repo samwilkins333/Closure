@@ -2,7 +2,7 @@
   "name": "closure",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "closure.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -16,10 +16,7 @@
     "url": "https://github.com/samwilkins333/Closure/issues"
   },
   "homepage": "https://github.com/samwilkins333/Closure#readme",
-  "dependencies": {
-    "@types/rimraf": "^2.0.3",
-    "rimraf": "^3.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/node": "^12.11.1"
   }
